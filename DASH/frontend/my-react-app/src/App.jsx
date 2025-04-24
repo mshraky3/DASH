@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import Header from '../components/Header/Header';
+import { useLocation } from 'react-router-dom'; // Import useLocation
 
 function App() {
-  const [count, setCount] = useState(0)
+    const location = useLocation();
+    const [stats, setStats] = useState(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    useEffect(() => {
+        if (location.state?.message) {
+            setStats(location.state);
+            const timer = setTimeout(() => {
+                setStats(null); // Clear the stats after 4 seconds
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        } else {
+            setStats(null); // Reset stats if location.state is null or undefined
+        }
+    }, [location.state]); // Ensure location.state is a dependency
+
+    return (
+        <div className="app-container">
+            {stats?.message && (
+                <div className="message">
+                    <p>{stats.message}</p>
+                </div>
+            )}
+            
+            <Header isUser={stats?.isUser ?? false} />
+        </div>
+    );
 }
 
-export default App
+export default App;

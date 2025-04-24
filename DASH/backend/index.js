@@ -5,6 +5,9 @@ import session from "express-session";
 import fileUpload from "express-fileupload"
 import multer from 'multer';
 import dotenv from 'dotenv';
+import cors from "cors";
+import axios from "axios";
+
 
 dotenv.config();
 
@@ -15,6 +18,15 @@ app.use(fileUpload());
 app.use(bodyParser.urlencoded({
     extended: !0
 }));
+
+cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+})
+app.use(cors());
+app.use(bodyParser.json());
+
 app.use('/public', express.static('public'));
 app.use(session({
     secret: "18/10/2019",
@@ -300,6 +312,8 @@ app.get("/", async (req, res) => {
         res.redirect("/login")
     }
 });
+
+
 app.post("/profile", async (req, res) => {
     const {
         username,
@@ -333,6 +347,7 @@ app.post("/profile", async (req, res) => {
         return res.redirect("/login")
     }
 });
+
 app.get("/login", (req, res) => {
     res.render("login.ejs")
 })
@@ -387,6 +402,8 @@ app.post("/register", async (req, res) => {
         res.redirect("/register")
     }
 });
+
+
 app.get("/list/:type", async (req, res) => {
     try {
         const type = req.params.type;
@@ -835,6 +852,146 @@ app.get('/my_chat/:id', async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post("/api/login", async (req, res) => {
+    const { email, password } = req.body;
+    console.log(email, password);
+    try {
+        const result = await db.query(`
+      SELECT id, password, account_type 
+      FROM account 
+      WHERE username = $1
+    `, [email]);
+        if (result.rows.length > 0 && result.rows[0].password === password) {
+            res.sendStatus(200)
+        } else {
+            res.sendStatus(201)
+        }
+    } catch (err) {
+         res.sendStatus(404)
+    }
+});
+
+
+
+app.post("/api/register", async (req, res) => {
+    
+    try {
+
+        
+        const {
+            name,
+            username,
+            password,
+            location,
+            phone_number,
+            email,
+            website_url,
+            description,
+            account_type,
+        } = req.body;
+
+        const logo_image = req.files.logo_image; // Get the uploaded file
+        
+        // Validate required fields
+        if (!name || !username || !password || !location || !phone_number || !email || !account_type) {
+            return res.status(400).json({ mseeg: "All fields are required." });
+        }
+
+        // Validate password length
+        if (password.length < 8) {
+            return res.status(400).json({ mseeg: "The password must be more than 8 characters long." });
+        }
+
+        // Validate file upload
+        if (!logo_image) {
+            return res.status(400).json({ mseeg: "Please select an image." });
+        }
+
+        if (logo_image.size > 50 * 1024 * 1024) {
+            return res.status(400).json({ mseeg: "Image size must be under 50 MB." });
+        }
+
+        // Check if the username already exists
+        const checkResult = await db.query("SELECT 1 FROM account WHERE username = $1", [username]);
+        if (checkResult.rows.length > 0) {
+            return res.status(400).json({ mseeg: "Username is already used, try to login or use another username." });
+        }
+
+        
+        const insertQuery = `
+            INSERT INTO account (
+                username, password, name, logo_image, location, phone_number, email, website_url, rating, description, account_type
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        `;
+        const values = [
+            username,
+            password,
+            name,
+            logo_image.buffer, // Store the binary data of the image
+            location,
+            phone_number,
+            email,
+            website_url,
+            0, // Default rating
+            description,
+            account_type,
+        ];
+       
+        const dbres = await db.query(insertQuery, values);
+        console.log(dbres)
+        // Return success response
+        return res.status(200).json({ message: "Registration successful! Please login." });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ mseeg: "An error occurred during registration." });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.listen(process.env.port, () => {
   console.log('Server is running on port' + process.env.port);
 });
+
+
