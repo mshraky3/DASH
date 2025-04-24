@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Header from '../components/Header/Header';
 import { useLocation } from 'react-router-dom'; // Import useLocation
+import List from '../components/Posts/List/List';
 
 function App() {
     const location = useLocation();
@@ -29,6 +30,7 @@ function App() {
             )}
             
             <Header isUser={stats?.isUser ?? false} />
+            <List />
         </div>
     );
 }
