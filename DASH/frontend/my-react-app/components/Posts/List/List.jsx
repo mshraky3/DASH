@@ -1,98 +1,81 @@
+// JSX
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./List.css";
+import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 const List = () => {
-    const [posts, setPosts] = useState([]); // Store fetched posts
+    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get("http://localhost:3000/api/Posts");
-                console.log("API Response:", response); // Log the entire response for debugging
 
-                if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
-                    setPosts(response.data.data); // Ensure the data is an array
+                if (response.status === 200 && Array.isArray(response.data?.data)) {
+                    setPosts(response.data.data);
                 } else {
                     setError("Unexpected API response format.");
                 }
             } catch (err) {
-                console.error("Error fetching data:", err);
-                setError("An error occurred while fetching data.");
+                setError("Failed to fetch data");
             } finally {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    if (loading) return <div className="container">Loading...</div>;
+    if (error) return <div className="container">{error}</div>;
 
-    if (error) {
-        return <div>{error}</div>;
-    }
+
 
     return (
+
+
         <div className="container">
             <h1 className="title">Engineering Firms</h1>
-            <hr />
             <div className="content">
-                {Array.isArray(posts) && posts.length > 0 ? (
-                    posts.map((post) => (
-                        <div key={post.post_id} className="parent">
-                            {/* Render the first image if available */}
-                            {Array.isArray(post.images) && post.images.length > 0 && post.images[0].image && (
-                                <img
-                                    className="div1"
-                                    src={`data:image/jpeg;base64,${post.images[0].image}`}
-                                    alt={`${post.account_name} Logo`}
-                                    style={{
-                                        width: "90%",
-                                        aspectRatio: "16/9",
-                                        marginBottom: "3%",
-                                    }}
-                                />
-                            )}
-                            <div className="div2">
-                                <div className="flex-start">
-                                    <p>
-                                        COMPANY NAME: <strong>{post.account_name}</strong>
-                                    </p>
-                                </div>
+                <div className="marquee">
+                    {/* Double the posts for seamless looping */}
+                    {[...posts, ...posts].map((post, index) => (
+                        <div
+                            key={`${post.post_id}-${index}`}
+                            className="parent"
+                            style={{
+                                backgroundImage: post.images?.[0]?.image
+                                    ? `url(data:image/jpeg;base64,${post.images[0].image})`
+                                    : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+                            }}
+                        >
+                            <div className="card-content company-name">
+                                <strong>{post.account_name}</strong>
                             </div>
-                            <div className="div3">
-                                <div className="flex">
-                                    <p>LOCATION: {post.location}</p>
-                                </div>
+
+                            <div className="card-content">
+                                {post.location}
                             </div>
-                            <div className="div4">
-                                <div className="flex">
-                                    <p>TITLE: {post.post_title}</p>
-                                </div>
+
+                            <div className="card-content">
+                                {post.post_title}
                             </div>
-                            <div className="div7">
-                                <a
-                                    href={`/account/company/${post.account_id}`} // Use account_id instead of id
-                                    className="more-details"
-                                >
-                                    View Account{" "}
-                                    <i
-                                        style={{ color: "#a2aa93" }}
-                                        className="fa-sharp-duotone fa-solid fa-arrow-right-long fa-fade fa-2xl"
-                                    ></i>
-                                </a>
+
+                            <div
+                                onClick={()=>{navigate('/profile', { state: { UserID: post.account_id } })}}
+                                className="card-content more-details"
+                            >
+                                View Account
+                                <i className="fa-sharp-duotone fa-solid fa-arrow-right-long fa-fade fa-2xl" />
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p>No posts available.</p>
-                )}
+                    ))}
+                </div>
             </div>
-        </div>
+        </div >
     );
 };
 

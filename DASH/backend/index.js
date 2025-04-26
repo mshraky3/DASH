@@ -5,6 +5,8 @@ import fileUpload from "express-fileupload"
 import multer from 'multer';
 import dotenv from 'dotenv';
 import cors from "cors";
+import sharp from 'sharp'; // Add this import at the top with other imports
+
 dotenv.config();
 const app = express();
 app.use(fileUpload());
@@ -34,12 +36,16 @@ app.post("/api/login", async (req, res) => {
       WHERE username = $1
     `, [email]);
         if (result.rows.length > 0 && result.rows[0].password === password) {
-            res.sendStatus(200)
+            res.json({
+                message: "Login successful",
+                stats: 200,
+                id: result.rows[0].id
+            })
         } else {
-            res.sendStatus(201)
+            res.json({stats:201})
         }
     } catch (err) {
-         res.sendStatus(404)
+         res.json({stats:404})
     }
 });
 
@@ -85,6 +91,16 @@ app.post("/api/register", async (req, res) => {
             return res.status(400).json({ mseeg: "Username is already used, try to login or use another username." });
         }
 
+        // Convert image to WebP format
+        let webpImageBuffer;
+        try {
+            webpImageBuffer = await sharp(logo_image.data)
+                .webp({ quality: 80 }) // Adjust quality as needed (80% is a good balance)
+                .toBuffer();
+        } catch (sharpError) {
+            console.error("Image conversion error:", sharpError);
+            return res.status(400).json({ mseeg: "Invalid image file. Please upload a valid image." });
+        }
         
         const insertQuery = `
             INSERT INTO account (
@@ -95,7 +111,7 @@ app.post("/api/register", async (req, res) => {
             username,
             password,
             name,
-            logo_image.buffer, // Store the binary data of the image
+            webpImageBuffer, // Store the converted WebP image
             location,
             phone_number,
             email,
@@ -114,6 +130,7 @@ app.post("/api/register", async (req, res) => {
         return res.status(500).json({ mseeg: "An error occurred during registration." });
     }
 });
+
 
 app.get("/api/Posts", async (req, res) => {
     try {
@@ -185,6 +202,105 @@ app.get("/api/Posts", async (req, res) => {
 
 
 
+app.post("/api/profile", async (req, res) => {
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ error: "Account ID is required" });
+    }
+
+    try {
+ 
+        const query = `
+            SELECT 
+                a.id AS account_id,
+                a.username,
+                a.name,
+                a.logo_image,
+                a.location,
+                a.phone_number,
+                a.email,
+                a.website_url,
+                a.rating,
+                a.rating_length,
+                a.description AS account_description,
+                a.account_type,
+                p.post_id,
+                p.account_name AS post_account_name,
+                p.location AS post_location,
+                p.description AS post_description,
+                p.post_title,
+                p.post_type,
+                pi.image_id,
+                pi.image AS post_image
+            FROM 
+                public.account a
+            LEFT JOIN 
+                public.posts p ON a.id = p.account_id
+            LEFT JOIN 
+                public.post_images pi ON p.post_id = pi.post_id
+            WHERE 
+                a.id = $1;
+        `;
+
+        // Execute the query
+        const result = await db.query(query, [id]);
+
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Account not found" });
+        }
+
+        const accountData = {
+            account_id: result.rows[0].account_id,
+            username: result.rows[0].username,
+            name: result.rows[0].name,
+            logo_image: result.rows[0].logo_image,
+            location: result.rows[0].location,
+            phone_number: result.rows[0].phone_number,
+            email: result.rows[0].email,
+            website_url: result.rows[0].website_url,
+            rating: result.rows[0].rating,
+            rating_length: result.rows[0].rating_length,
+            description: result.rows[0].account_description,
+            account_type: result.rows[0].account_type,
+            posts: [],
+        };
+
+        // Organize posts and images
+        const postsMap = new Map(); // Map to group images by post_id
+
+        result.rows.forEach(row => {
+            if (row.post_id && !postsMap.has(row.post_id)) {
+                postsMap.set(row.post_id, {
+                    post_id: row.post_id,
+                    account_name: row.post_account_name,
+                    location: row.post_location,
+                    description: row.post_description,
+                    post_title: row.post_title,
+                    post_type: row.post_type,
+                    images: [],
+                });
+            }
+
+            if (row.post_id && row.image_id) {
+                postsMap.get(row.post_id).images.push({
+                    image_id: row.image_id,
+                    image: row.post_image,
+                });
+            }
+        });
+
+        // Convert the map to an array and add it to the account data
+        accountData.posts = Array.from(postsMap.values());
+
+        // Send the response
+        res.status(200).json(accountData);
+    } catch (error) {
+        console.error("Error fetching profile data:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 
 

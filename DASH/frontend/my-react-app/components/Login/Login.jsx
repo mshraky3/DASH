@@ -1,15 +1,15 @@
-import React, { useState   } from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
-const Login =  () => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -17,14 +17,15 @@ const Login =  () => {
                 email,
                 password
             })
-            switch (login.status) {
+            switch (login.data.stats) {
                 case 200:
-                    navigate('/' , { state: { message: 'welcome login sessifal' , isUser:true } });                   break;
+                    navigate('/', { state: { message: 'welcome login sessifal', isUser: true, UserID: login.data.id } });
+                    break;
                 case 201:
-                    navigate('/register' , { state: { message: 'regster first' } });
+                    navigate('/register', { state: { message: 'regster first' } });
                     break;
                 default:
-                    navigate('/register' , { state: { message: 'User dosnt exists' } });
+                    navigate('/register', { state: { message: 'User dosnt exists' } });
                     break;
             }
         } catch (error) {
@@ -60,6 +61,7 @@ const Login =  () => {
                     />
                 </div>
                 <button type="submit" >Login</button>
+                <Link type="button" to='/register' >register</Link>
             </form>
         </div>
     );

@@ -2,10 +2,12 @@ import React from 'react';
 import './Header.css';
 import Navbar from '../Navbar/Navbar';
 
+
 const Header = (props) => {
+
     return (
         <header className="header">
-            <Navbar id={0} isUser={props.isUser} />
+            <Navbar UserID={props.UserID} isUser={props.isUser ?props.isUser  : false } />
            
             <div className="header-content">
                 <h1 className="header-title">Welcome to Our Website</h1>

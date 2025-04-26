@@ -1,8 +1,19 @@
 import React from 'react';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
+// Removed unused import
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = (props) => {
+
+
+    const navigate = useNavigate();
+    function To_profile(id) {
+
+        navigate('/profile', { state: { UserID: id } })
+    }
+
+
     return (
         <>
             <nav>
@@ -13,19 +24,20 @@ const Navbar = (props) => {
                             <Link className="dash-text">DASH</Link>
                         </div>
                     </li>
-
-                    {/* Links Container */}
                     <li className='links-cont'>
                         <div className='links-cot'>
-                            <Link className="nav-link">مكاتب هندسية</Link>
-                            <Link className="nav-link">مقاولات</Link>
-                            <Link className="nav-link">افراد</Link>
+                            <Link className="nav-link" to='/login' >انشر مشروعك </Link>
+                            <Link className="nav-link" to='/login' >ابحث عن عميل </Link>
+
+
+
                             {props.isUser ? (
-                                <Link className="nav-link" to='/login'>profile</Link>
+                                <div div className="nav-link"
+                                    onClick={() => { To_profile(props.UserID) }}
+                                > profile</div>
                             ) : (
                                 <>
-                                    <Link className="nav-link" to='/login'>login</Link>
-                                    <Link className="nav-link" to='/register'>sign up</Link>
+                                    <Link className="nav-link" to='/login' >login</Link>
                                 </>
                             )}
                         </div>

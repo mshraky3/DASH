@@ -6,8 +6,8 @@ import List from '../components/Posts/List/List';
 
 function App() {
     const location = useLocation();
+    const data = location.state
     const [stats, setStats] = useState(null);
-
     useEffect(() => {
         if (location.state?.message) {
             setStats(location.state);
@@ -17,9 +17,9 @@ function App() {
 
             return () => clearTimeout(timer);
         } else {
-            setStats(null); // Reset stats if location.state is null or undefined
+            setStats(null); // Reset stats if location.data is null or undefined
         }
-    }, [location.state]); // Ensure location.state is a dependency
+    }, [location.state]); // Ensure location.data is a dependency
 
     return (
         <div className="app-container">
@@ -29,7 +29,8 @@ function App() {
                 </div>
             )}
             
-            <Header isUser={stats?.isUser ?? false} />
+            <Header isUser={data?.isUser} UserID={data?.UserID} />
+
             <List />
         </div>
     );
