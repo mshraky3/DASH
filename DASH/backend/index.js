@@ -22,7 +22,7 @@ const upload = multer({
 });
 
 // const db=new pg.Client({user:"users_x5qf_user",host:"dpg-crd1mqg8fa8c73bg324g-a",port:5432,password:"gdFRLYxirPld1F0MrJ1rsK6LVlDDvFjj",database:"users_x5qf",})
-const db = new pg.Client({password: "Ejc9c123",host: "localhost",database: "DASH",user: "postgres",port: 5432})
+const db = new pg.Client({password: process.env.password,host: process.env.host ,database: process.env.db ,user:process.env.user ,port: 5432})
 db.connect()
 
 
