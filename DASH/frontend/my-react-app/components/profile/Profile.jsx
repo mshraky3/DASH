@@ -30,7 +30,7 @@ function Profile() {
 
 
   function AddPost() {
-    navigator('/addpost', { state: { ThisUserID:location.state.ThisUserID } });
+    navigator('/addpost', { state: { ThisUserID:location.state.ThisUserID  , name:data.name , Type:location.state.Type } });
   } 
 
   return (
@@ -60,7 +60,7 @@ function Profile() {
             </div>
             <div className="profile-info">
               <h1 className="profile-name">
-                {data.name || data.username}
+                {data.name }
                 {data.account_type === 'verified' && <span className="verified-badge">✓</span>}
               </h1>
               <p className="profile-title">{data.account_type || 'Member'}</p>
