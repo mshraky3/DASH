@@ -41,7 +41,7 @@ app.post("/api/login", async (req, res) => {
                 message: "Login successful",
                 stats: 200,
                 id: result.rows[0].id , 
-                account_type: result.rows[0].account_type,
+                account_type
             })
         } else {
             res.json({stats:201})
@@ -144,8 +144,7 @@ app.get("/api/Posts", async (req, res) => {
                 p.location,
                 p.description,
                 p.account_id,
-                p.post_title,
-                p.post_type
+                p.post_title
             FROM 
                 posts p
         `;
@@ -173,9 +172,8 @@ app.get("/api/Posts", async (req, res) => {
                 .filter(imageRow => imageRow.post_id === post.post_id)
                 .map(imageRow => ({
                     image_id: imageRow.image_id,
-                    image: imageRow.image ? imageRow.image.toString('base64') : null // Convert binary image data to Base64
+                    image: imageRow.image ? imageRow.image.toString('base64') : null,
                 }));
-
             return {
                 post_id: post.post_id,
                 account_name: post.account_name,
@@ -183,36 +181,30 @@ app.get("/api/Posts", async (req, res) => {
                 description: post.description,
                 account_id: post.account_id,
                 post_title: post.post_title,
-                post_type: post.post_type,
-                images: imagesForPost // Attach images to the corresponding post
+                images: imagesForPost,
             };
         });
-        
-        console.log(postsWithImages);
+
         res.status(200).json({
             success: true,
-            data: postsWithImages
+            data: postsWithImages,
         });
     } catch (err) {
         console.error("Error fetching posts and images:", err);
         res.status(500).json({
             success: false,
-            error: "An error occurred while fetching posts and images."
+            error: "An error occurred while fetching posts and images.",
         });
     }
 });
 
 
-
 app.post("/api/profile", async (req, res) => {
     const { id } = req.body;
-
     if (!id) {
         return res.status(400).json({ error: "Account ID is required" });
     }
-
     try {
- 
         const query = `
             SELECT 
                 a.id AS account_id,
@@ -232,7 +224,6 @@ app.post("/api/profile", async (req, res) => {
                 p.location AS post_location,
                 p.description AS post_description,
                 p.post_title,
-                p.post_type,
                 pi.image_id,
                 pi.image AS post_image
             FROM 
@@ -244,11 +235,7 @@ app.post("/api/profile", async (req, res) => {
             WHERE 
                 a.id = $1;
         `;
-
-        // Execute the query
         const result = await db.query(query, [id]);
-
-
         if (result.rows.length === 0) {
             return res.status(404).json({ error: "Account not found" });
         }
@@ -269,9 +256,7 @@ app.post("/api/profile", async (req, res) => {
             posts: [],
         };
 
-        // Organize posts and images
-        const postsMap = new Map(); // Map to group images by post_id
-
+        const postsMap = new Map();
         result.rows.forEach(row => {
             if (row.post_id && !postsMap.has(row.post_id)) {
                 postsMap.set(row.post_id, {
@@ -280,11 +265,9 @@ app.post("/api/profile", async (req, res) => {
                     location: row.post_location,
                     description: row.post_description,
                     post_title: row.post_title,
-                    post_type: row.post_type,
                     images: [],
                 });
             }
-
             if (row.post_id && row.image_id) {
                 postsMap.get(row.post_id).images.push({
                     image_id: row.image_id,
@@ -293,10 +276,7 @@ app.post("/api/profile", async (req, res) => {
             }
         });
 
-        // Convert the map to an array and add it to the account data
         accountData.posts = Array.from(postsMap.values());
-
-        // Send the response
         res.status(200).json(accountData);
     } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -304,6 +284,63 @@ app.post("/api/profile", async (req, res) => {
     }
 });
 
+app.post("/api/addpost", async (req, res) => {
+    try {
+        const {
+            account_name,
+            location,
+            description,
+            account_id,
+            post_title,
+        } = req.body;
+
+        // Check if files were uploaded
+        if (!req.files || !req.files.images) {
+            return res.status(400).json({ error: "No images uploaded." });
+        }
+
+        const images = Array.isArray(req.files.images)
+            ? req.files.images
+            : [req.files.images];
+
+        // Insert post into the `posts` table
+        const postInsertQuery = `
+            INSERT INTO posts (
+                account_name, location, description, account_id, post_title
+            ) VALUES ($1, $2, $3, $4, $5)
+            RETURNING post_id
+        `;
+        const postValues = [
+            account_name,
+            location,
+            description,
+            account_id,
+            post_title,
+        ];
+        const postResult = await db.query(postInsertQuery, postValues);
+        const postId = postResult.rows[0].post_id;
+
+        // Process and store images in the `post_images` table
+        for (const image of images) {
+            // Convert image to WebP format
+            const webpImageBuffer = await sharp(image.data)
+                .webp({ quality: 80 })
+                .toBuffer();
+
+            const imageInsertQuery = `
+                INSERT INTO post_images (image, post_id)
+                VALUES ($1, $2)
+            `;
+            const imageValues = [webpImageBuffer, postId];
+            await db.query(imageInsertQuery, imageValues);
+        }
+
+        res.status(200).json({ message: "Post added successfully!" });
+    } catch (err) {
+        console.error("Error adding post:", err);
+        res.status(500).json({ error: "An error occurred while adding the post." });
+    }
+});
 
 
 
