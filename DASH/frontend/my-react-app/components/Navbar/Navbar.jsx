@@ -10,7 +10,7 @@ const Navbar = (props) => {
     const navigate = useNavigate();
     function To_profile(id) {
 
-        navigate('/profile', { state: { UserID: id } })
+        navigate('/profile', { state: { UserID: id , ThisUserID:props.ThisUserID } } )
     }
 
 

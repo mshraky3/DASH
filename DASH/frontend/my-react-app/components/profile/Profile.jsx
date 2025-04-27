@@ -30,6 +30,13 @@ function Profile() {
 
   return (
     <div className="profile-container">
+
+      
+      { location.state.ThisUserID == location.state.UserID ? 
+        (<h2 className="profile-title">my profile</h2>) :
+        (<h2 className="profile-title">user profile</h2>)
+      }
+      
       {data ? (
         <div className="profile-card">
           <div className="profile-header">
@@ -151,16 +158,16 @@ function Profile() {
 
           <div className="profile-footer">
             <button className="action-button primary">Contact</button>
-            {data.website_url && (
-              <a
-                href={data.website_url}
+            { location.state.ThisUserID == location.state.UserID ?  (
+              <div
+                onClick={AddPost}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="action-button secondary"
               >
                 Visit Website
-              </a>
-            )}
+              </div>
+            ) : null}
           </div>
         </div>
       ) : (

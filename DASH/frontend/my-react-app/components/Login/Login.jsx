@@ -19,7 +19,7 @@ const Login = () => {
             })
             switch (login.data.stats) {
                 case 200:
-                    navigate('/', { state: { message: 'welcome login sessifal', isUser: true, UserID: login.data.id } });
+                    navigate('/', { state: { message: 'welcome login sessifal', isUser: true, UserID: login.data.id , ThisUserID: login.data.id } });
                     break;
                 case 201:
                     navigate('/register', { state: { message: 'regster first' } });

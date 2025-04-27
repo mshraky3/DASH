@@ -29,9 +29,9 @@ function App() {
                 </div>
             )}
             
-            <Header isUser={data?.isUser} UserID={data?.UserID} />
+            <Header isUser={data?.isUser} UserID={data?.UserID} ThisUserID={data?.ThisUserID} />
 
-            <List />
+            <List  ThisUserID={data?.ThisUserID} />
         </div>
     );
 }

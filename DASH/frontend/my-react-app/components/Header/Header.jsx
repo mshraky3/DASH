@@ -7,7 +7,7 @@ const Header = (props) => {
 
     return (
         <header className="header">
-            <Navbar UserID={props.UserID} isUser={props.isUser ?props.isUser  : false } />
+            <Navbar UserID={props.UserID} isUser={props.isUser ?props.isUser  : false } ThisUserID={props.ThisUserID}  />
            
             <div className="header-content">
                 <h1 className="header-title">Welcome to Our Website</h1>
@@ -16,7 +16,6 @@ const Header = (props) => {
                     <button className="header-button">Get Started</button>
                     <button className="header-button">Get Started</button>
                 </div>
-
             </div>
         </header>
     );

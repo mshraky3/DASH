@@ -35,11 +35,13 @@ app.post("/api/login", async (req, res) => {
       FROM account 
       WHERE username = $1
     `, [email]);
+
         if (result.rows.length > 0 && result.rows[0].password === password) {
             res.json({
                 message: "Login successful",
                 stats: 200,
-                id: result.rows[0].id
+                id: result.rows[0].id , 
+                account_type: result.rows[0].account_type,
             })
         } else {
             res.json({stats:201})
