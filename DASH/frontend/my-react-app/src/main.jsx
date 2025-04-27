@@ -6,6 +6,7 @@ import App from './App.jsx';
 import Login from '../components/Login/Login.jsx';
 import Register from '../components/Login/register.jsx';
 import Profile from '../components/profile/profile.jsx';
+import AddPost from '../components/Posts/Post/AddPost.jsx';
 
 
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     {
         path: "/profile",
         element: <Profile />
+    },
+    {
+        path: "/addpost",
+        element: <AddPost />
     }
 ]);
 

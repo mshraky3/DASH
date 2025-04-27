@@ -12,7 +12,7 @@ function App() {
         if (location.state?.message) {
             setStats(location.state);
             const timer = setTimeout(() => {
-                setStats(null); // Clear the stats after 4 seconds
+                setStats(null);
             }, 4000);
 
             return () => clearTimeout(timer);
@@ -29,7 +29,7 @@ function App() {
                 </div>
             )}
             
-            <Header isUser={data?.isUser} UserID={data?.UserID} ThisUserID={data?.ThisUserID} />
+            <Header isUser={data?.isUser} UserID={data?.UserID} ThisUserID={data?.ThisUserID} Type={data?.Type} />
 
             <List  ThisUserID={data?.ThisUserID} />
         </div>
