@@ -17,9 +17,10 @@ const Login = () => {
                 email,
                 password
             })
+            console.log(login.data)
             switch (login.data.stats) {
                 case 200:
-                    navigate('/', { state: { message: 'welcome login sessifal', isUser: true, UserID: login.data.id , ThisUserID: login.data.id } });
+                    navigate('/', { state: { message: 'welcome login sessifal', isUser: true, UserID: login.data.id , ThisUserID: login.data.id , Type:login.data.account_type } });
                     break;
                 case 201:
                     navigate('/register', { state: { message: 'regster first' } });

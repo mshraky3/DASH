@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation  , useNavigate} from 'react-router-dom';
 import './Profile.css';
 import axios from 'axios';
 
@@ -13,7 +13,7 @@ const bufferToBase64 = (bufferArray) => {
 function Profile() {
   const location = useLocation();
   const [data, setData] = useState(null);
-
+  const navigator = useNavigate(); 
   useEffect(() => {
     async function fetchData() {
       try {
@@ -28,13 +28,18 @@ function Profile() {
     fetchData();
   }, [location.state.UserID]);
 
+
+  function AddPost() {
+    navigator('/addpost', { state: { ThisUserID:location.state.ThisUserID } });
+  } 
+
   return (
     <div className="profile-container">
 
-      
-      { location.state.ThisUserID == location.state.UserID ? 
-        (<h2 className="profile-title">my profile</h2>) :
-        (<h2 className="profile-title">user profile</h2>)
+      {console.log(location.state)}
+      { (location.state.ThisUserID === location.state.UserID )? 
+        (<h2 className="profile-title">my profile  </h2>) :
+        (<h2 className="profile-title">user profile </h2>)
       }
       
       {data ? (
@@ -158,14 +163,14 @@ function Profile() {
 
           <div className="profile-footer">
             <button className="action-button primary">Contact</button>
-            { location.state.ThisUserID == location.state.UserID ?  (
+            { (location.state.ThisUserID == location.state.UserID && location.state.Type ==="user"  ) ?  (
               <div
                 onClick={AddPost}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="action-button secondary"
               >
-                Visit Website
+                Add Post
               </div>
             ) : null}
           </div>

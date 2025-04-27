@@ -7,7 +7,7 @@ const Header = (props) => {
 
     return (
         <header className="header">
-            <Navbar UserID={props.UserID} isUser={props.isUser ?props.isUser  : false } ThisUserID={props.ThisUserID}  />
+            <Navbar UserID={props.UserID} isUser={props.isUser ?props.isUser  : false } ThisUserID={props.ThisUserID} Type={props.Type} />
            
             <div className="header-content">
                 <h1 className="header-title">Welcome to Our Website</h1>
