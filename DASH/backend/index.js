@@ -7,11 +7,12 @@ import dotenv from 'dotenv';
 import cors from "cors";
 import sharp from 'sharp'; // Add this import at the top with other imports
 
+
 dotenv.config();
 const app = express();
 app.use(fileUpload());
-app.use(bodyParser.urlencoded({extended: !0}));
-cors({origin: "*",methods: ["GET", "POST"],allowedHeaders: ["Content-Type", "Authorization"]})
+app.use(bodyParser.urlencoded({ extended: !0 }));
+cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type", "Authorization"] })
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -22,37 +23,33 @@ const upload = multer({
 });
 
 // const db=new pg.Client({user:"users_x5qf_user",host:"dpg-crd1mqg8fa8c73bg324g-a",port:5432,password:"gdFRLYxirPld1F0MrJ1rsK6LVlDDvFjj",database:"users_x5qf",})
-const db = new pg.Client({password: process.env.password,host: process.env.host ,database: process.env.db ,user:process.env.user ,port: 5432})
+const db = new pg.Client({ password: process.env.password, host: process.env.host, database: process.env.db, user: process.env.user, port: 5432 })
 db.connect()
 
 
 app.post("/api/login", async (req, res) => {
-    const { email, password } = req.body;
-    console.log(email, password);
+    const { email , password } = req.body;
+    console.log(email , password)
     try {
-        const result = await db.query(`
-      SELECT id, password, account_type 
-      FROM account 
-      WHERE username = $1
-    `, [email]);
-
+        const result = await db.query(`SELECT id, password, account_type FROM account WHERE username = $1`,[email]);
         if (result.rows.length > 0 && result.rows[0].password === password) {
             res.json({
                 message: "Login successful",
                 stats: 200,
-                id: result.rows[0].id , 
-                account_type
+                id: result.rows[0].id,
+                account_type:result.rows[0].account_type
             })
         } else {
-            res.json({stats:201})
+            res.json({ stats: 201 })
         }
     } catch (err) {
-         res.json({stats:404})
+        console.error("Error during login:", err);
+        res.json({ stats: 404 })
     }
 });
 
 
-app.post("/api/register", async (req, res) => { 
+app.post("/api/register", async (req, res) => {
     try {
         const {
             name,
@@ -67,7 +64,7 @@ app.post("/api/register", async (req, res) => {
         } = req.body;
 
         const logo_image = req.files.logo_image; // Get the uploaded file
-        
+
         // Validate required fields
         if (!name || !username || !password || !location || !phone_number || !email || !account_type) {
             return res.status(400).json({ mseeg: "All fields are required." });
@@ -103,7 +100,7 @@ app.post("/api/register", async (req, res) => {
             console.error("Image conversion error:", sharpError);
             return res.status(400).json({ mseeg: "Invalid image file. Please upload a valid image." });
         }
-        
+
         const insertQuery = `
             INSERT INTO account (
                 username, password, name, logo_image, location, phone_number, email, website_url, rating, description, account_type
@@ -122,7 +119,7 @@ app.post("/api/register", async (req, res) => {
             description,
             account_type,
         ];
-       
+
         const dbres = await db.query(insertQuery, values);
         console.log(dbres)
         // Return success response
@@ -346,7 +343,7 @@ app.post("/api/addpost", async (req, res) => {
 
 
 app.listen(process.env.port, () => {
-  console.log('Server is running on port' + process.env.port);
+    console.log('Server is running on port' + process.env.port);
 });
 
 
