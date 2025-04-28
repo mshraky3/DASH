@@ -13,7 +13,8 @@ const List = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/Posts");
+                const host = process.env.REACT_APP_HOST;
+                const response = await axios.get(host + "/Posts");
 
                 if (response.status === 200 && Array.isArray(response.data?.data)) {
                     setPosts(response.data.data);

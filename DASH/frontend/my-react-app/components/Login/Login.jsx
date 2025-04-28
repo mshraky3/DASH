@@ -12,12 +12,13 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const host = process.env.REACT_APP_HOST;
         try {
-            const login = await axios.post('http://localhost:3000/api/login', {
+            const login = await axios.post(host + '/login', {
                 email,
                 password
             })
-            console.log(login.data)
+            console.log(login.data.stats);
             switch (login.data.stats) {
                 case 200:
                     navigate('/', { state: { message: 'welcome login sessifal', isUser: true, UserID: login.data.id , ThisUserID: login.data.id , Type:login.data.account_type } });

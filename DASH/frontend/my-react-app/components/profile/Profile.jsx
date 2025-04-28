@@ -3,6 +3,9 @@ import { useLocation  , useNavigate} from 'react-router-dom';
 import './Profile.css';
 import axios from 'axios';
 
+
+
+
 // Helper function to convert Buffer array to base64
 const bufferToBase64 = (bufferArray) => {
   if (!bufferArray || !bufferArray.data || !Array.isArray(bufferArray.data)) return null;
@@ -11,13 +14,14 @@ const bufferToBase64 = (bufferArray) => {
 };
 
 function Profile() {
+  const host = process.env.REACT_APP_HOST;
   const location = useLocation();
   const [data, setData] = useState(null);
   const navigator = useNavigate(); 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.post('http://localhost:3000/api/profile', {
+        const response = await axios.post(host + '/profile', {
           id: location.state.UserID
         });
         setData(response.data);

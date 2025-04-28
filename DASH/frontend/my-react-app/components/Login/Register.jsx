@@ -65,9 +65,9 @@ const Register = () => {
         formDataToSend.append("description", formData.description);
         formDataToSend.append("account_type", formData.account_type);
         formDataToSend.append("logo_image", formData.logo_image); // File field
-    
+        const host = process.env.REACT_APP_HOST;
         try {
-            const response = await axios.post("http://localhost:3000/api/register", formDataToSend);
+            const response = await axios.post(host + "/register", formDataToSend);
     
             if (response.status === 200) {
                 navigate("/login", { state: { message: response.data.message } });

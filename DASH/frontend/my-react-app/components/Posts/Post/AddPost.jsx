@@ -52,7 +52,8 @@ const AddPost = () => {
         });
 
         try {
-            await axios.post('http://localhost:3000/api/addpost', formDataToSend, {
+            const host = process.env.REACT_APP_HOST;
+            await axios.post(host+'/addpost', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
