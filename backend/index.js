@@ -486,7 +486,7 @@ app.get("/post/:type/:id", async (req, res) => {
             images: images.length > 0 ? images : ['']
         };
 
-        res.render('post', { data, type, account_id: null });
+        res.render('post', { data, type, account_id: null, comments: [] });
     } catch (err) {
         console.error("Error:", err);
         res.redirect('/');
