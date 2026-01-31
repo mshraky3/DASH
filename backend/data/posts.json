@@ -1,0 +1,29 @@
+{
+    "posts": [
+        {
+            "post_id": 1,
+            "account_name": "Demo Engineering Firm",
+            "location": "Riyadh",
+            "description": "Modern villa design with sustainable features and smart home integration",
+            "account_id": 1,
+            "post_title": "Luxury Villa Project"
+        },
+        {
+            "post_id": 2,
+            "account_name": "Best Contractors Co",
+            "location": "Jeddah",
+            "description": "Complete renovation of commercial building including electrical and plumbing",
+            "account_id": 2,
+            "post_title": "Commercial Building Renovation"
+        },
+        {
+            "post_id": 3,
+            "account_name": "Ahmed Ali",
+            "location": "Dammam",
+            "description": "Interior design consultation and 3D visualization services",
+            "account_id": 3,
+            "post_title": "Interior Design Services"
+        }
+    ],
+    "nextPostId": 4
+}

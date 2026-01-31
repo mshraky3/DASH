@@ -1,0 +1,20 @@
+{
+    "images": [
+        {
+            "image_id": 1,
+            "image": "",
+            "post_id": 1
+        },
+        {
+            "image_id": 2,
+            "image": "",
+            "post_id": 2
+        },
+        {
+            "image_id": 3,
+            "image": "",
+            "post_id": 3
+        }
+    ],
+    "nextImageId": 4
+}
