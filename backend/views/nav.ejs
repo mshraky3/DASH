@@ -10,32 +10,63 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/public/imges/logo.png">
 </head>
-<style>.container-fluid {
+<style>
+.container-fluid {
   background-color: transparent !important;
 }
 
 .navbar-brand {
-  color: #fcfcfc
+  color: #fcfcfc;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: #a2aa93;
+  transform: scale(1.05);
 }
 
 .navbar {
-  background-color: transparent !important
+  background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%) !important;
+  padding: 1rem 2rem;
 }
 
 .navbar-nav {
-  margin-left: auto
+  margin-left: auto;
+  gap: 10px;
 }
 
 #profile-photo {
-  width: 30px;
-  border-radius: 50%
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #a2aa93;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+#profile-photo:hover {
+  border-color: #fff;
+  transform: scale(1.1);
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   align-content: center;
-  color: #fcfcfc
+  color: #fcfcfc;
+  font-weight: 500;
+  padding: 8px 16px !important;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background: rgba(162, 170, 147, 0.5);
+  color: #fff;
 }
 
 .butn {
@@ -44,7 +75,20 @@
   border: none;
   outline: none;
   box-shadow: none;
-  color: #fff
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.butn:hover {
+  color: #a2aa93;
+}
+
+.navbar-toggler {
+  border-color: rgba(255,255,255,0.5);
+}
+
+.navbar-toggler-icon {
+  filter: brightness(2);
 }
 
 </style>

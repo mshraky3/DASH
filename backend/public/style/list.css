@@ -2,29 +2,50 @@ body {
     font-family: "Playfair Display", serif;
     font-optical-sizing: auto;
     font-style: normal;
-    background-color: #f0f2f5;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
     margin: 0;
-    padding-top: 60px
+    padding-top: 60px;
+    min-height: 100vh;
 }
 
 .navbar {
-    background-color: #a2aa93 !important;
-    z-index: 1000
+    background: linear-gradient(135deg, #a2aa93 0%, #8a9280 100%) !important;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .navbar-brand,
 .nav-link,
 .butn {
-    color: #fcfcfc !important
+    color: #fcfcfc !important;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
 }
 
 .navbar-nav {
-    margin-left: auto
+    margin-left: auto;
+    gap: 8px;
 }
 
 #profile-photo {
-    width: 30px;
-    border-radius: 50%
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+#profile-photo:hover {
+    border-color: #fff;
+    transform: scale(1.1);
 }
 
 .butn {
@@ -80,12 +101,20 @@ img {
     grid-template-rows: 0.5fr repeat(2, 1fr) 0.5fr;
     grid-column-gap: 1.5%;
     background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgb(0 0 0 / .1);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     word-wrap: break-word;
     overflow-wrap: break-word;
-    margin-bottom: 20px
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(162, 170, 147, 0.1);
+}
+
+.parent:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    border-color: rgba(162, 170, 147, 0.3);
 }
 
 .div1 {
@@ -117,14 +146,23 @@ img {
 }
 
 .more-details {
-    display: block;
+    display: inline-block;
     margin-top: 20px;
-    color: #a2aa93;
-    text-decoration: none
+    color: #fff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #a2aa93 0%, #8a9280 100%);
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(162, 170, 147, 0.3);
 }
 
 .more-details:hover {
-    text-decoration: underline
+    text-decoration: none;
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(162, 170, 147, 0.4);
+    color: #fff;
 }
 
 @media (max-width:1200px) {

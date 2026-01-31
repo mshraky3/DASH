@@ -50,9 +50,9 @@
       <% companies.forEach(company => { %>
         <div class="parent">
           <% if(company.images && company.images[0] && company.images[0] !== '') { %>
-          <img class="div1" src="data:image/webp;base64,<%=company.images[0]%>" alt="<%=company.name%>" width="90%">
+          <img class="div1" src="<%=company.images[0]%>" alt="<%=company.name%>" width="90%">
           <% } else { %>
-          <div class="div1" style="width:90%; height:20vh; background-color:#a2aa93; display:flex; align-items:center; justify-content:center; color:white; font-size:24px;"><%= company.name.substring(0,2).toUpperCase() %></div>
+          <img class="div1" src="/public/imges/img12.webp" alt="<%=company.name%>" width="90%">
           <% } %>
           <style>
             .parent{
@@ -98,10 +98,10 @@
       <% }else {%>
         <%companies.forEach(company => { %>
           <div class="parent">
-              <% if(company.logo_image && company.logo_image[0] && company.logo_image[0] !== '') { %>
-              <img class="div1" src="data:image/webp;base64,<%= company.logo_image[0] %>" alt="<%= company.name %> Logo" width="60%" style=" aspect-ratio: 16/9; width:100%; " >
+              <% if(company.logo_image && company.logo_image !== '') { %>
+              <img class="div1" src="<%= company.logo_image %>" alt="<%= company.name %> Logo" width="60%" style=" aspect-ratio: 16/9; width:100%; " >
               <% } else { %>
-              <div class="div1" style="width:100%; aspect-ratio:16/9; background-color:#a2aa93; display:flex; align-items:center; justify-content:center; color:white; font-size:32px;"><%= company.name.substring(0,2).toUpperCase() %></div>
+              <img class="div1" src="/public/imges/img12.webp" alt="<%= company.name %> Logo" width="60%" style=" aspect-ratio: 16/9; width:100%; " >
               <% } %>
             <div class="div2">
               <div class="flex-start">
